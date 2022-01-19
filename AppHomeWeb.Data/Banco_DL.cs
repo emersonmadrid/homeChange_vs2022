@@ -18,7 +18,7 @@ namespace AppHomeWeb.Data
                 try
                 {
              
-                    //esoooo yy
+                    //esoooo yy  ddddd aaaa
                     SqlCommand cmd = new SqlCommand("usp_listar_banco", con);
                     cmd.CommandType = CommandType.StoredProcedure;
                     con.Open();
