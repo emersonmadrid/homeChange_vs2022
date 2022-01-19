@@ -21,7 +21,7 @@ namespace AppHomeWeb.Data
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@usuario", Ent.usuario);
                     cmd.Parameters.AddWithValue("@clave", Ent.clave);
-
+                    //borrar comentario
                     con.Open();
 
                     SqlDataReader reader = cmd.ExecuteReader();
