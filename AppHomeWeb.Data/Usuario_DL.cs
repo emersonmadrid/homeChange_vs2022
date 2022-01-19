@@ -11,13 +11,6 @@ namespace AppHomeWeb.Data
         {
             List<Usuario_BE> ListaUsuario = new List<Usuario_BE>();
             Conexion_DL oConectar = new Conexion_DL();
-            //no sirve borrar i eeee
-            int oi = 0;
-            if (oi == 1)
-            {
-                oi = 1;
-            }
-            //no sirve borrar f
             int id_usuario = 0;
 
             using (SqlConnection con = new SqlConnection(oConectar.CadenaConexion()))
