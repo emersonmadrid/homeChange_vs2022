@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+    @Styles.Render("~/Content/css431")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    <script>
+        var Session = {};
+    </script>
+    @*<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>*@
+    <link href="~/Areas/Transactions/Css/SeleccionPerfil.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            /*background-image: url('/Areas/Transactions/Images/FondoSeleccionPerfil.jpg');*/
+            /*background-color: lightgreen;*/
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+
+<!------ Include the above in your HEAD tag ---------->
+<body>
+    <div class="wrapper" id="ContenedorSeleccionPerfil">
+        <section id="team">
+            <div class="container my-1 py-2 text-center">
+
+                <div class="row mb-5">
+                    <div class="col">
+                        <h1>
+                            ¿Con que perfil cambiarás hoy?
+                        </h1>
+                        <p class="mt-1">  . </p>
+                    </div>
+                </div>
+
+                <div class="row" id="ContenedorPerfil">
+
+                    @*<div class="col-lg-3 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <img src="~/Areas/Transactions/Images/iconperfiles2.png" alt="" class="img-fluid rounded-circle w-50 mb-3">
+                                    <h3>Bienvenido</h3>
+                                    <h5>Jose Ernesto</h5>
+                                    <p class="py-4"></p>
+                                    <div class="d-flex flex-row justify-content-center">
+                                        <div class="p-12">
+                                            <button type="button" class="btn btn-primary"> Ingresar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+
+                </div>
+            </div>
+
+
+
+
+            @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                    Open modal
+                </button>*@
+
+            <!-- The Modal -->
+            <div class="modal" id="myModal">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header modal-info">
+                            <h4 class="modal-title">Registrar nuevo perfil</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                <form>
+                                    <div class="form-group">
+                                        <div class="col-md-12 col-xs-6">
+                                            <label for="txtrazonsocial">Razon Social</label>
+                                            <input type="text" id="txtrazonsocial" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12 col-xs-6">
+                                            <label for="txtRuc">Ruc</label>
+                                            <input type="text" id="txtRuc" class="form-control">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-2"></div>
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" id="btnRegistrarPerfil" class="btn btn-info" data-dismiss="modal">Registrar</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
+
+@Scripts.Render("~/bundles/bootstrap")
+@Scripts.Render("~/bundles/jquery-addon-home")
+@Scripts.Render("~/bundles/Home-Struct")
+@Scripts.Render("~/bundles/HomeMoneyLib")
+@Scripts.Render("~/bundles/SeleccionPerfil")
