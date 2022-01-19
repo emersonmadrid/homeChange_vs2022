@@ -1,0 +1,480 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    <script>
+        var Session = {};
+    </script>
+    @*<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>*@
+
+    <style>
+        /*    --------------------------------------------------
+        :: General
+        -------------------------------------------------- */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: #353535;
+        }
+
+        .content h1 {
+            text-align: center;
+        }
+
+        .content .content-footer p {
+            color: #6d6d6d;
+            font-size: 12px;
+            text-align: center;
+        }
+
+            .content .content-footer p a {
+                color: inherit;
+                font-weight: bold;
+            }
+
+        /*	--------------------------------------------------
+        :: Table Filter
+        -------------------------------------------------- */
+        .panel {
+            border: 1px solid #ddd;
+            background-color: #fcfcfc;
+        }
+
+            .panel .btn-group {
+                margin: 15px 0 30px;
+            }
+
+                .panel .btn-group .btn {
+                    transition: background-color .3s ease;
+                }
+
+        .table-filter {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+            .table-filter tbody tr:hover {
+                cursor: pointer;
+                background-color: #eee;
+            }
+
+            .table-filter tbody tr td {
+                padding: 10px;
+                vertical-align: middle;
+                border-top-color: #eee;
+            }
+
+            .table-filter tbody tr.selected td {
+                background-color: #eee;
+            }
+
+            .table-filter tr td:first-child {
+                width: 38px;
+            }
+
+            .table-filter tr td:nth-child(2) {
+                width: 35px;
+            }
+
+        .ckbox {
+            position: relative;
+        }
+
+            .ckbox input[type="checkbox"] {
+                opacity: 0;
+            }
+
+            .ckbox label {
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+                .ckbox label:before {
+                    content: '';
+                    top: 1px;
+                    left: 0;
+                    width: 18px;
+                    height: 18px;
+                    display: block;
+                    position: absolute;
+                    border-radius: 2px;
+                    border: 1px solid #bbb;
+                    background-color: #fff;
+                }
+
+            .ckbox input[type="checkbox"]:checked + label:before {
+                border-color: #2BBCDE;
+                background-color: #2BBCDE;
+            }
+
+            .ckbox input[type="checkbox"]:checked + label:after {
+                top: 3px;
+                left: 3.5px;
+                content: '\e013';
+                color: #fff;
+                font-size: 11px;
+                font-family: 'Glyphicons Halflings';
+                position: absolute;
+            }
+
+        .table-filter .star {
+            color: #ccc;
+            text-align: center;
+            display: block;
+        }
+
+            .table-filter .star.star-checked {
+                color: #F0AD4E;
+            }
+
+            .table-filter .star:hover {
+                color: #ccc;
+            }
+
+            .table-filter .star.star-checked:hover {
+                color: #F0AD4E;
+            }
+
+        .media-photo {
+            width: 25px;
+            height: 25px;
+        }
+
+        .table-filter .media-body {
+            display: block;
+            /* Had to use this style to force the div to expand (wasn't necessary with my bootstrap version 3.3.6) */
+        }
+
+        .table-filter .media-meta {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .table-filter .media .title {
+            color: #2BBCDE;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: normal;
+            margin: 0;
+        }
+
+        #span {
+            font-size: .8em;
+            margin-right: 20px;
+        }
+
+        .pagado {
+            color: #5cb85c;
+        }
+
+        .pendiente {
+            color: #f0ad4e;
+        }
+
+        .cancelado {
+            color: #d9534f;
+        }
+
+        .table-filter .media .summary {
+            font-size: 14px;
+        }
+    </style>
+
+
+
+</head>
+
+<!------ Include the above in your HEAD tag ---------->
+<body>
+
+
+    <div id="ContenedorMisCuentasBancarias">
+
+        <div>
+            <div class="">
+                <div class="row" style="margin-left:20px; margin-right:1px">
+                    <div class="row">
+                        <section class="container">
+                            <center><h1>Mis cuentas bancarias</h1></center>
+                            <div class=""></div>
+                            <div class="col-md-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="pull-right">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-info btn-filter" data-toggle="modal" data-target="#basicModal">Agregar Cuenta</button>
+                                            </div>
+                                        </div>
+                                        <div class="table-container">
+                                            <table id="tbPackageListCuentaBancaria" class="table table-filter">
+                                                <thead class="claro-bg-primary">
+                                                    <tr>
+                                                        <th style="text-align: center; width: inherit;">Banco</th>
+                                                        <th style="text-align: center; width: inherit;">Cuenta</th>
+                                                        <th style="text-align: center; width: inherit;">Titular</th>
+                                                        <th style="text-align: center; width: inherit;">Moneda</th>
+                                                        <th style="text-align: center; width: inherit;">Eliminar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbPackageBodyCuentaList"></tbody>
+                                                @*<tbody>
+                                                        <tr data-status="pagado">
+                                                            <td>
+                                                                <div class="ckbox">
+                                                                    <input type="checkbox" id="checkbox1">
+                                                                    <label for="checkbox1"></label>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <a href="javascript:;" class="star">
+                                                                    <i class="glyphicon glyphicon-star"></i>
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <div class="media">
+                                                                    <a href="#" class="pull-left">
+                                                                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
+                                                                    </a>
+                                                                    <div class="media-body">
+                                                                        <span class="media-meta pull-right">Febrero 13, 2016</span>
+                                                                        <h4 class="title">
+                                                                            Lorem Impsum
+                                                                            <span class="pull-right pagado">(Pagado)</span>
+                                                                        </h4>
+                                                                        <p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr data-status="pendiente">
+                                                            <td>
+                                                                <div class="ckbox">
+                                                                    <input type="checkbox" id="checkbox3">
+                                                                    <label for="checkbox3"></label>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <a href="javascript:;" class="star">
+                                                                    <i class="glyphicon glyphicon-star"></i>
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <div class="media">
+                                                                    <a href="#" class="pull-left">
+                                                                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
+                                                                    </a>
+                                                                    <div class="media-body">
+                                                                        <span class="media-meta pull-right">Febrero 13, 2016</span>
+                                                                        <h4 class="title">
+                                                                            Lorem Impsum
+                                                                            <span class="pull-right pendiente">(Pendiente)</span>
+                                                                        </h4>
+                                                                        <p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr data-status="cancelado">
+                                                            <td>
+                                                                <div class="ckbox">
+                                                                    <input type="checkbox" id="checkbox2">
+                                                                    <label for="checkbox2"></label>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <a href="javascript:;" class="star">
+                                                                    <i class="glyphicon glyphicon-star"></i>
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <div class="media">
+                                                                    <a href="#" class="pull-left">
+                                                                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
+                                                                    </a>
+                                                                    <div class="media-body">
+                                                                        <span class="media-meta pull-right">Febrero 13, 2016</span>
+                                                                        <h4 class="title">
+                                                                            Lorem Impsum
+                                                                            <span class="pull-right cancelado">(Cancelado)</span>
+                                                                        </h4>
+                                                                        <p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr data-status="pagado" class="selected">
+                                                            <td>
+                                                                <div class="ckbox">
+                                                                    <input type="checkbox" id="checkbox4" checked>
+                                                                    <label for="checkbox4"></label>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <a href="javascript:;" class="star star-checked">
+                                                                    <i class="glyphicon glyphicon-star"></i>
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <div class="media">
+                                                                    <a href="#" class="pull-left">
+                                                                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
+                                                                    </a>
+                                                                    <div class="media-body">
+                                                                        <span class="media-meta pull-right">Febrero 13, 2016</span>
+                                                                        <h4 class="title">
+                                                                            Lorem Impsum
+                                                                            <span class="pull-right pagado">(Pagado)</span>
+                                                                        </h4>
+                                                                        <p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr data-status="pendiente">
+                                                            <td>
+                                                                <div class="ckbox">
+                                                                    <input type="checkbox" id="checkbox5">
+                                                                    <label for="checkbox5"></label>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <a href="javascript:;" class="star">
+                                                                    <i class="glyphicon glyphicon-star"></i>
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <div class="media">
+                                                                    <a href="#" class="pull-left">
+                                                                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
+                                                                    </a>
+                                                                    <div class="media-body">
+                                                                        <span class="media-meta pull-right">Febrero 13, 2016</span>
+                                                                        <h4 class="title">
+                                                                            Lorem Impsum
+                                                                            <span class="pull-right pendiente">(Pendiente)</span>
+                                                                        </h4>
+                                                                        <p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>*@
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title" id="myModalLabel">Agregar Cuenta Bancaria</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                           
+                                                        <form role="form">
+
+                                                            <div class="panel">
+                                                                @*<div class="panel panel-heading"> <i class="glyphicon glyphicon-user"></i> Datos del usuario</div>*@
+                                                                <div class="panel-body">
+                                                                    <div class="form-group">
+
+                                                                        <label for="cboTipoDocumeno"><h5>¿Es una cuenta propia?<h5></label>
+                                                                        <label class="radio-inline"><input type="radio" name="optradio" checked>Si</label>
+                                                                        <label class="radio-inline"><input type="radio" name="optradio" >No</label>
+
+                                                                    </div>
+
+                                                                    <div class="form-group">
+
+                                                                        <label for="cboMoneda"><h5>Moneda:</h5></label>
+                                                                        <select id="cboMoneda" class="form-control"></select>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="txtnumerocuenta"><h5>Numero de cuenta:</h5></label>
+                                                                        <input type="text" class="form-control" name="txtnumerocuenta" id="txtnumerocuenta" placeholder="Ingrese número de cuenta">
+
+                                                                    </div>
+
+                                                                    <div id="pnlNoCuentaPropia" style="display:block">
+                                                                        <div class="form-group">
+
+                                                                            <label for="txtnombretitular"><h5>Nombre del titular:</h5></label>
+                                                                            <input type="text" class="form-control" name="txtnombretitular" id="txtnombretitular" placeholder="Ingrese nombre del titular">
+
+                                                                        </div>
+
+                                                                        <div class="form-group">
+
+
+                                                                            <label for="cboTipoDocumento"><h5>Tipo de documento:</h5></label>
+                                                                            <select id="cboTipoDocumento" class="form-control"></select>
+
+                                                                        </div>
+
+                                                                        <div class="form-group">
+
+                                                                            <label for="txtnumerodocumento"><h5>Número de documento:</h5></label>
+                                                                            <input type="text" class="form-control" name="txtnumerodocumento" id="txtnumerodocumento" placeholder="Ingrese número de documento">
+
+                                                                        </div>
+
+                                                                    </div>
+
+
+
+                                                                </div>
+                                                            </div>
+
+                                                        </form>
+
+                                               
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary" id="btnAgregarCuentaBancaria">Save changes</button>
+                                            </div>
+                                        </div>
+                                            </div>
+                                </div>
+
+                                <div class="content-footer">
+                                    <p>
+                                        Page © - 2020 <br>
+
+                                    </p>
+                                </div>
+                            </div>
+                            <div class=""></div>
+                        </section>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <input type="hidden" name="hdidPerfilUsuario" id="hdidPerfilUsuario" value="@ViewBag.idperfilusuario" />
+
+    </div>
+
+</body>
+</html>
+@Scripts.Render("~/bundles/bootstrap")
+@Scripts.Render("~/bundles/jquery-addon-home")
+@Scripts.Render("~/bundles/Home-Struct")
+@Scripts.Render("~/bundles/HomeMoneyLib ")
+@Scripts.Render("~/bundles/MisCuentasBancarias")
+
+
+
+
